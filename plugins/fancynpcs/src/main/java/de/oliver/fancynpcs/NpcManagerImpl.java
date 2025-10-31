@@ -252,14 +252,17 @@ public class NpcManagerImpl implements NpcManager {
                 String worldName = npcConfig.getString("npcs." + id + ".location.world");
                 World world = Bukkit.getWorld(worldName);
 
+                // NevusNetwork -- START
                 if (world == null) {
-                    world = (!ServerSoftware.isFolia()) ? new WorldCreator(worldName).createWorld() : null;
-                }
-
-                if (world == null) {
-                    logger.info("Could not load npc '" + id + "', because the world '" + worldName + "' is not loaded");
+                    npcConfig.set("npcs." + id, null);
+                    try {
+                        npcConfig.save(npcConfigFile);
+                    } catch (IOException e) {
+                        logger.error("Could not save npc config file", ThrowableProperty.of(e));
+                    }
                     continue;
                 }
+                // NevusNetwork -- END
 
                 double x = npcConfig.getDouble("npcs." + id + ".location.x");
                 double y = npcConfig.getDouble("npcs." + id + ".location.y");
