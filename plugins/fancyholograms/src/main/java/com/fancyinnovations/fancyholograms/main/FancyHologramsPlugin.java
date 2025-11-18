@@ -212,6 +212,17 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         if (!configuration.areVersionNotificationsMuted()) {
             checkForNewerVersion();
         }
+        if (versionConfig.isDevelopmentBuild()) {
+            fancyLogger.warn("""
+                    
+                    --------------------------------------------------
+                    You are using a development build of FancyHolograms.
+                    Please be aware that there might be bugs in this version.
+                    If you find any bugs, please report them on our discord server (https://discord.gg/ZUgYCEJUEx).
+                    Read more about the risks of using a development build here: https://docs.fancyinnovations.com/development-guidelines/versioning/#build
+                    --------------------------------------------------
+                    """);
+        }
 
         metrics.register();
         metrics.registerLegacy();
@@ -300,7 +311,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldLoadedListener(), this);
 
-        if (Bukkit.getMinecraftVersion().equals("1.21.4") || Bukkit.getMinecraftVersion().equals("1.21.5") || Bukkit.getMinecraftVersion().equals("1.21.6")) {
+        if (Set.of("1.21.4", "1.21.5", "1.21.6").contains(Bukkit.getMinecraftVersion())) {
             getServer().getPluginManager().registerEvents(new PlayerLoadedListener(), this);
         }
 

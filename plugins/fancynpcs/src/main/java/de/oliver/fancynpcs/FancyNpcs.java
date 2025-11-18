@@ -53,6 +53,7 @@ import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
 import de.oliver.fancynpcs.v1_21_1.Npc_1_21_1;
+import de.oliver.fancynpcs.v1_21_11.Npc_1_21_11;
 import de.oliver.fancynpcs.v1_21_3.Npc_1_21_3;
 import de.oliver.fancynpcs.v1_21_4.Npc_1_21_4;
 import de.oliver.fancynpcs.v1_21_5.Npc_1_21_5;
@@ -82,6 +83,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public static final FeatureFlag USE_NATIVE_THREADS_FEATURE_FLAG = new FeatureFlag("use-native-threads", "Use native threads instead of virtual threads.", false);
     public static final FeatureFlag ENABLE_DEBUG_MODE_FEATURE_FLAG = new FeatureFlag("enable-debug-mode", "Enable debug mode", false);
     public static final FeatureFlag ENABLE_FOLIA_VISIBILITY_FIX_FEATURE_FLAG = new FeatureFlag("enable-folia-visibility-fix", "When enabled, all npcs will respawn after 100ms when they should spawn", false);
+    public static final FeatureFlag USE_MINECRAFT_USERCACHE_FEATURE_FLAG = new FeatureFlag("use-minecraft-usercache", "Include the content of usercache.json to the username->uuid cache", false);
 
     private static FancyNpcs instance;
     private final ExtendedFancyLogger fancyLogger;
@@ -163,6 +165,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
+            case "1.21.11" -> npcAdapter = Npc_1_21_11::new;
             case "1.21.9", "1.21.10" -> npcAdapter = Npc_1_21_9::new;
             case "1.21.6", "1.21.7", "1.21.8" -> npcAdapter = Npc_1_21_6::new;
             case "1.21.5" -> npcAdapter = Npc_1_21_5::new;
@@ -190,7 +193,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             fancyLogger.error("Unsupported minecraft server version.");
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("This plugin only supports 1.19.4 - 1.21.8");
+            getLogger().warning("This plugin only supports 1.19.4 - 1.21.11");
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
@@ -276,7 +279,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         pluginManager.registerEvents(new PlayerTeleportListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         pluginManager.registerEvents(skinManager, instance);
-        if (Bukkit.getMinecraftVersion().equals("1.21.4") || Bukkit.getMinecraftVersion().equals("1.21.5") || Bukkit.getMinecraftVersion().equals("1.21.6") || Bukkit.getMinecraftVersion().equals("1.21.7") || Bukkit.getMinecraftVersion().equals("1.21.8") || Bukkit.getMinecraftVersion().equals("1.21.9") || Bukkit.getMinecraftVersion().equals("1.21.10")) {
+        if (Set.of("1.21.4", "1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10", "1.21.11").contains(Bukkit.getMinecraftVersion())) {
             getServer().getPluginManager().registerEvents(new PlayerLoadedListener(), this);
         }
 

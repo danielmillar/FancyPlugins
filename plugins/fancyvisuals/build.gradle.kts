@@ -26,7 +26,7 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.9-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
     rootProject.subprojects
         .filter { it.path.startsWith(":libraries:packets:implementations") }
@@ -40,7 +40,7 @@ dependencies {
     compileOnly("de.oliver.FancyAnalytics:mc-api:0.1.11") // loaded in FancyVisualLoader
     compileOnly("de.oliver.FancyAnalytics:logger:0.0.8") // loaded in FancyVisualLoader
 
-    implementation("org.lushplugins:ChatColorHandler:6.0.2")
+    implementation("org.lushplugins:ChatColorHandler:6.0.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
     // commands
@@ -81,7 +81,7 @@ paper {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.9")
+        minecraftVersion("1.21.10")
 
         downloadPlugins {
             hangar("ViaVersion", "5.3.2")

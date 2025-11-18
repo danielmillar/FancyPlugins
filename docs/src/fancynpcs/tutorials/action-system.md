@@ -73,6 +73,10 @@ Syntax: `send_to_server (server name)`
 
 Example: `/npc action (npc) (trigger) add send_to_server skyblock`
 
+!!!info
+Make sure to set `bungee-plugin-message-channel` to `true` in the velocity.toml config file. Otherwise, this action might not work properly.
+!!!
+
 ### execute_random_action
 
 Picks a random action from the remaining actions in the list and executes it. This action is useful for creating random behavior in NPCs.
@@ -117,6 +121,10 @@ Checks if the player has a specific permission. If the player does not have the 
 Syntax: `need_permission (permission)`
 
 Example: `/npc action (npc) (trigger) add need_permission my.cool.permission`
+
+!!!info
+If you add the `!` prefix to the permission, the action will be inverted. This means that the action list will be canceled if the player has the permission.
+!!!
 
 ### play_sound
 

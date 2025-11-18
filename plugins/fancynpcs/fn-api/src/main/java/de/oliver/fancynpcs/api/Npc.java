@@ -132,7 +132,7 @@ public abstract class Npc {
     public abstract void update(Player player, boolean swingArm);
 
     public void update(Player player) {
-        update(player, true);
+        update(player, FancyNpcsPlugin.get().getFancyNpcConfig().isSwingArmOnUpdate());
     }
 
     public void updateForAll(boolean swingArm) {
@@ -142,13 +142,13 @@ public abstract class Npc {
     }
 
     public void updateForAll() {
-        updateForAll(true);
+        updateForAll(FancyNpcsPlugin.get().getFancyNpcConfig().isSwingArmOnUpdate());
     }
 
     public abstract void move(Player player, boolean swingArm);
 
     public void move(Player player) {
-        move(player, true);
+        move(player, FancyNpcsPlugin.get().getFancyNpcConfig().isSwingArmOnUpdate());
     }
 
     public void moveForAll(boolean swingArm) {
@@ -158,7 +158,7 @@ public abstract class Npc {
     }
 
     public void moveForAll() {
-        moveForAll(true);
+        moveForAll(FancyNpcsPlugin.get().getFancyNpcConfig().isSwingArmOnUpdate());
     }
 
     public void interact(Player player) {

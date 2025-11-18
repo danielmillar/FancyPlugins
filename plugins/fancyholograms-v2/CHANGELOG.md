@@ -1,3 +1,1 @@
-- Improved performance by running more tasks asynchronously
-- Improved logging
-- Added HologramManager#isLoaded method
+- Added support for 1.21.11
