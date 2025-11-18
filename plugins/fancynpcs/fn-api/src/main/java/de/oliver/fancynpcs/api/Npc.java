@@ -114,7 +114,7 @@ public abstract class Npc {
                 spawn(player);
 
                 // Respawn the npc to fix visibility issues on Folia
-                if (ServerSoftware.isFolia()) {
+                if (ServerSoftware.isFolia() && FancyNpcsPlugin.get().getFeatureFlagConfig().getFeatureFlag("enable-folia-visibility-fix").isEnabled()) {
                     FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
                         remove(player);
                         spawn(player);
