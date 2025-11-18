@@ -156,6 +156,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         featureFlagConfig.addFeatureFlag(USE_NATIVE_THREADS_FEATURE_FLAG);
         featureFlagConfig.addFeatureFlag(ENABLE_DEBUG_MODE_FEATURE_FLAG);
         featureFlagConfig.addFeatureFlag(ENABLE_FOLIA_VISIBILITY_FIX_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(USE_MINECRAFT_USERCACHE_FEATURE_FLAG);
         featureFlagConfig.load();
 
         if (ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()) {
