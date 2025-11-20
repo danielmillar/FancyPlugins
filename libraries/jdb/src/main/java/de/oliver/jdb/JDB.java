@@ -16,7 +16,7 @@ import java.util.Map;
  * The JDB class provides a simple JSON document-based storage system in a specified directory.
  */
 public class JDB {
-    private final static Gson GSON = new GsonBuilder()
+    public final static Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .disableHtmlEscaping()
             .create();
@@ -24,6 +24,7 @@ public class JDB {
     private static final String FILE_EXTENSION = ".json";
     private final @NotNull String basePath;
     private final @NotNull File baseDirectory;
+    private final JIndex index;
 
     /**
      * Constructs a new JDB instance with the specified base path.
@@ -33,6 +34,8 @@ public class JDB {
     public JDB(@NotNull String basePath) {
         this.basePath = basePath;
         this.baseDirectory = new File(basePath);
+        
+        this.index = JIndex.load("jdb_index", basePath);
     }
 
     /**
@@ -47,6 +50,13 @@ public class JDB {
     public <T> T get(@NotNull String path, @NotNull Class<T> clazz) throws IOException {
         File documentFile = new File(baseDirectory, createFilePath(path));
         if (!documentFile.exists()) {
+
+            // Check index for alternative path
+            if (index.indexMap().containsKey(path)) {
+                String indexPath = index.indexMap().get(path);
+                return get(indexPath, clazz);
+            }
+
             return null;
         }
         BufferedReader bufferedReader = Files.newBufferedReader(documentFile.toPath());
@@ -134,11 +144,34 @@ public class JDB {
     }
 
     /**
+     * Saves the given value as a document at the specified path and indexes it under additional paths.
+     */
+    public <T> void set(@NotNull String path, @NotNull T value, String... indexPaths) throws IOException {
+        set(path, value);
+        for (String indexPath : indexPaths) {
+            indexDocument(indexPath, path);
+        }
+    }
+
+    /**
+     * Indexes a document by mapping the original path to the index path.
+     *
+     * @param originalPath the original relative path (excluding .json extension) of the document
+     * @param indexPath    the index relative path (excluding .json extension) to map to the original document
+     */
+    public void indexDocument(@NotNull String originalPath, @NotNull String indexPath) {
+        index.indexMap().put(originalPath, indexPath);
+        index.save();
+    }
+
+    /**
      * Deletes the document(s) at the specified path.
      *
      * @param path the relative path (excluding .json extension) of the document(s) to be deleted
      */
     public void delete(@NotNull String path) {
+        index.indexMap().remove(path);
+
         File file = new File(baseDirectory, path);
         if (file.isDirectory()) {
             deleteDirectory(file);
