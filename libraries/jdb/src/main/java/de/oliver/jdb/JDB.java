@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class JDB {
     public JDB(@NotNull String basePath) {
         this.basePath = basePath;
         this.baseDirectory = new File(basePath);
-        
+
         this.index = JIndex.load("jdb_index", basePath);
     }
 
@@ -170,7 +171,12 @@ public class JDB {
      * @param path the relative path (excluding .json extension) of the document(s) to be deleted
      */
     public void delete(@NotNull String path) {
-        index.indexMap().remove(path);
+        for (Map.Entry<String, String> entry : new HashSet<>(index.indexMap().entrySet())) {
+            if (entry.getKey().equals(path) || entry.getValue().equals(path)) {
+                index.indexMap().remove(entry.getKey());
+                index.save();
+            }
+        }
 
         File file = new File(baseDirectory, path);
         if (file.isDirectory()) {
