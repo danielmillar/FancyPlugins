@@ -96,6 +96,26 @@ public class JDB {
     }
 
     /**
+     * Counts the number of documents in the specified directory path.
+     *
+     * @param path the relative directory path
+     * @return the number of documents in the directory
+     */
+    public int countDocuments(@NotNull String path) {
+        File directory = new File(baseDirectory, path);
+        if (!directory.exists()) {
+            return 0;
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return 0;
+        }
+
+        return files.length;
+    }
+
+    /**
      * Saves the given value as a document at the specified path.
      *
      * @param <T>   the type of the object to be saved
