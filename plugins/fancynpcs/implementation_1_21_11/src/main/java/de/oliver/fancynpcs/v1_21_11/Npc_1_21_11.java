@@ -231,6 +231,8 @@ public class Npc_1_21_11 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
+        List<Packet<? super ClientGamePacketListener>> packets = new ArrayList<>();
+
         PlayerTeam team = new PlayerTeam(new Scoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().name() : npc.getStringUUID());
@@ -268,11 +270,11 @@ public class Npc_1_21_11 extends Npc {
             }
 
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
-            serverPlayer.connection.send(playerInfoPacket);
+            packets.add(playerInfoPacket);
         }
 
         boolean isTeamCreatedForPlayer = this.isTeamCreated.getOrDefault(player.getUniqueId(), false);
-        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
+        packets.add(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
         isTeamCreated.put(player.getUniqueId(), true);
 
         npc.setGlowingTag(data.isGlowing());
@@ -297,7 +299,7 @@ public class Npc_1_21_11 extends Npc {
 
         if (!equipmentList.isEmpty()) {
             ClientboundSetEquipmentPacket setEquipmentPacket = new ClientboundSetEquipmentPacket(npc.getId(), equipmentList);
-            serverPlayer.connection.send(setEquipmentPacket);
+            packets.add(setEquipmentPacket);
         }
 
         if (npc instanceof ServerPlayer) {
@@ -320,7 +322,7 @@ public class Npc_1_21_11 extends Npc {
             } else {
                 if (sittingVehicle != null) {
                     ClientboundRemoveEntitiesPacket removeSittingVehiclePacket = new ClientboundRemoveEntitiesPacket(sittingVehicle.getId());
-                    serverPlayer.connection.send(removeSittingVehiclePacket);
+                    packets.add(removeSittingVehiclePacket);
                 }
             }
 
@@ -333,9 +335,11 @@ public class Npc_1_21_11 extends Npc {
             attributeInstance.setBaseValue(data.getScale());
 
             ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
-            serverPlayer.connection.send(updateAttributesPacket);
-
+            packets.add(updateAttributesPacket);
         }
+
+        ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
+        serverPlayer.connection.send(bundlePacket);
     }
 
     @Override
