@@ -3,7 +3,7 @@ icon: dot
 order: 7
 ---
 
-# Placeholders API
+# Placeholder API
 
 FancyCore includes a Placeholders API that allows you to create and manage custom placeholders for use in various plugins.
 
