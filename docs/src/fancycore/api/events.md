@@ -12,7 +12,8 @@ FancyCore has its own event system that allows you to listen to various events t
 Example for registering a listener for the `PlayerReportedEvent`:
 
 ```java
-EventService eventService = FancyCore.get().getEventService();
+EventService eventService = EventService.get();
+
 eventService.registerListener(PlayerReportedEvent.class, (event) -> {
     System.out.println("PlayerReportedEvent fired with report id: " + event.getReport().id());
 });

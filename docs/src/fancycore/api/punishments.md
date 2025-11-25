@@ -12,7 +12,7 @@ FancyCore provides a comprehensive Punishment API that allows you to manage play
 With the Punishment Service, you can easily issue various types of punishments to players. Below are examples of how to use the Punishment Service:
 
 ```java
-PunishmentService punishmentService = FancyCore.get().getPunishmentService();
+PunishmentService punishmentService = PunishmentService.get();
 
 punishmentService.warnPlayer(player, staff, "reason", duration);
 
